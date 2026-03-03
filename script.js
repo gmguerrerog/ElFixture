@@ -777,6 +777,14 @@ window.addEventListener('beforeinstallprompt', (e) => {
 if (btnInstallPwa) {
     btnInstallPwa.addEventListener('click', async () => {
         if (deferredPrompt) {
+            // Evento Personalizado GA4: Rastrea el clic en el botón de instalación
+            if (typeof gtag === 'function') {
+                gtag('event', 'install_button_click', {
+                    'event_category': 'PWA',
+                    'event_label': 'Botón Instalar App'
+                });
+            }
+
             // Show the official browser install prompt
             deferredPrompt.prompt();
 
