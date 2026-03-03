@@ -781,20 +781,25 @@ document.addEventListener('DOMContentLoaded', () => {
             element.style.padding = originalPadding;
             element.style.borderRadius = originalRadius;
 
-            try {
-                const imgData = canvas.toDataURL('image/png');
+            canvas.toBlob(function (blob) {
+                if (!blob) {
+                    alert("Tu navegador móvil bloqueó la descarga de la imagen por seguridad. Intenta desde un PC.");
+                    return;
+                }
+                const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.download = filename;
-                link.href = imgData;
+                link.href = url;
 
                 // Append, click, remove - much safer for mobile browsers
                 document.body.appendChild(link);
                 link.click();
-                document.body.removeChild(link);
-            } catch (err) {
-                console.error("Canvas toDataURL failed: ", err);
-                alert("Tu navegador móvil bloqueó la descarga de la imagen por seguridad. Intenta desde un PC.");
-            }
+
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            }, 'image/png');
         }).catch(err => {
             console.error("Export Error: ", err);
             alert("Hubo un error al generar la imagen. Intenta de nuevo.");
