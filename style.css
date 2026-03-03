@@ -132,13 +132,44 @@ body {
 /* Base Layout Container */
 .console-viewport {
     width: 95%;
-    height: 95%;
+    height: calc(100vh - 200px);
+    /* Leave room for ads */
     max-width: 1600px;
     display: flex;
     flex-direction: column;
     gap: var(--gap-lg);
     z-index: 10;
     position: relative;
+    margin: auto;
+}
+
+/* Ad Banners */
+.ad-banner-top,
+.ad-banner-bottom {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 90px;
+    background: rgba(10, 25, 47, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba(240, 240, 240, 0.4);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    z-index: 999;
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.ad-banner-top {
+    top: 0;
+    border-top: none;
+}
+
+.ad-banner-bottom {
+    bottom: 0;
+    border-bottom: none;
 }
 
 /* Glassmorphism Panel */
@@ -202,7 +233,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: var(--gap-md) var(--gap-lg);
-    height: 80px;
+    min-height: 140px;
 }
 
 .logo-container {
@@ -212,7 +243,8 @@ body {
 }
 
 .bloom-logo {
-    height: 50px;
+    height: 120px;
+    /* Increased from 50px */
     filter: drop-shadow(0 0 10px rgba(0, 243, 255, 0.5));
 }
 
@@ -256,7 +288,8 @@ body {
     }
 }
 
-.mode-selector {
+.mode-selector,
+.team-size-selector {
     display: flex;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 20px;
@@ -404,17 +437,24 @@ body {
     flex-grow: 1;
     display: flex;
     align-items: center;
-    justify-content: center;
-    overflow: hidden;
+    justify-content: flex-start;
+    /* Changed from center to allow normal scrolling */
+    overflow: auto;
+    /* Changed from hidden to auto to allow scrolling */
     position: relative;
     padding: var(--gap-lg);
+    width: 100%;
 }
 
 .hyper-bento-grid {
     display: flex;
     justify-content: space-between;
-    width: 100%;
-    height: 100%;
+    min-width: max-content;
+    /* Ensure it takes up enough space horizontally */
+    min-height: max-content;
+    /* Ensure it takes up enough space vertically */
+    padding-bottom: 40px;
+    /* Add some padding so bottom nodes don't get cut by scrollbar */
 }
 
 /* Rounds */
@@ -428,14 +468,19 @@ body {
 .matchup {
     display: flex;
     flex-direction: column;
-    gap: var(--gap-md);
+    gap: var(--gap-sm);
+    /* Keep opposing teams close together */
     position: relative;
+    margin-bottom: 48px;
+    /* High margin between different matchups */
 }
 
 /* Nodes */
 .node {
-    padding: 20px 30px;
-    min-width: 200px;
+    padding: 10px 15px;
+    /* Reduced from 20px 30px */
+    min-width: 140px;
+    /* Reduced from 200px */
     text-align: center;
     clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
     /* True shield shape */
@@ -444,6 +489,8 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .node.waiting {
@@ -600,23 +647,50 @@ body {
 }
 
 /* Mobile Adjustments */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .input-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
     .command-bar {
         flex-direction: column;
-        height: auto;
+        justify-content: center;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        gap: 20px;
+    }
+
+    .status-indicators {
+        flex-direction: column;
         gap: 15px;
     }
 
+    .bloom-logo {
+        height: 80px;
+        /* Scale back down a bit for mobile */
+    }
+
     .hyper-bento-grid {
-        flex-direction: column;
+        padding-right: 40px;
+        /* Extra padding for swipe */
+    }
+}
+
+@media (max-width: 480px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+        /* 1 column on very small phones */
+    }
+
+    .console-viewport {
+        height: auto;
+        min-height: calc(100vh - 200px);
         overflow-y: auto;
     }
 
-    /* Simple vertical layout for mobile bracket instead of complex tree */
+    .neural-input-module {
+        padding: var(--gap-md);
+    }
 }
 
 /* Energy Burst transition effect */
