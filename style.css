@@ -387,7 +387,36 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--gap-lg);
+}
+
+/* Promotional Neon Text Banner */
+.promo-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--gap-lg);
+    padding: 0 var(--gap-md);
+}
+
+.promo-text-epic {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    max-width: 900px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--energy-secondary);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.6), 0 0 20px rgba(0, 243, 255, 0.3);
+    border-top: 1px solid rgba(0, 243, 255, 0.2);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+    padding: 15px 20px;
+    background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.05), transparent);
+}
+
+.promo-text-epic .highlight {
+    color: var(--energy-primary);
+    text-shadow: 0 0 15px rgba(255, 138, 0, 0.8), 0 0 30px rgba(255, 138, 0, 0.4);
+    font-weight: 700;
 }
 
 .input-grid {
@@ -395,6 +424,7 @@ body {
     grid-template-columns: repeat(4, 1fr);
     gap: var(--gap-md);
     width: 100%;
+    margin-bottom: var(--gap-lg);
 }
 
 .input-slot {

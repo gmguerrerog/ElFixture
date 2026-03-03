@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputModule = document.querySelector('.neural-input-module');
     const bracketView = document.getElementById('bracket-view');
     const leagueView = document.getElementById('league-view');
+    const promoBanner = document.getElementById('promo-banner');
     const btn8 = document.getElementById('btn-8-teams');
     const btn16 = document.getElementById('btn-16-teams');
 
@@ -344,6 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showBracket() {
         inputModule.style.display = 'none';
+        if (promoBanner) promoBanner.style.display = 'none';
         if (leagueView) leagueView.style.display = 'none';
         bracketView.style.display = 'flex';
         renderBracket(appState.teams);
@@ -352,6 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showLeague() {
         inputModule.style.display = 'none';
+        if (promoBanner) promoBanner.style.display = 'none';
         bracketView.style.display = 'none';
         if (leagueView) leagueView.style.display = 'block'; // Or flex depending on layout needs, but display:block works over the container
         renderCalendar();
