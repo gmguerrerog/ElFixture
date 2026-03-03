@@ -722,4 +722,104 @@ document.addEventListener('DOMContentLoaded', () => {
         renderInputs(8);
     }
 
+    // --- Epic 3: Legal Modals Logic ---
+    const legalLinks = document.querySelectorAll('.legal-link');
+    const modalCloses = document.querySelectorAll('.modal-close');
+    const overlays = document.querySelectorAll('.cyber-modal-overlay');
+
+    legalLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('data-modal');
+            const targetModal = document.getElementById(targetId);
+            if (targetModal) targetModal.classList.add('active');
+        });
+    });
+
+    modalCloses.forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.cyber-modal-overlay').classList.remove('active');
+        });
+    });
+
+    overlays.forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.classList.remove('active');
+        });
+    });
+
+    // --- Epic 3: HTML2Canvas Export Logic ---
+    function exportToPNG(elementId, filename) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+
+        // Save original styles explicitly
+        const originalBg = element.style.backgroundColor || '';
+        const originalPadding = element.style.padding || '';
+        const originalRadius = element.style.borderRadius || '';
+
+        // Force a solid dark background so transparent areas don't render black weirdly
+        element.style.backgroundColor = '#020202';
+        element.style.padding = '20px';
+        element.style.borderRadius = '10px';
+
+        // Use a safe scale for mobile (devicePixelRatio often crashes iOS if too high)
+        const scaleValue = window.devicePixelRatio > 1 ? 2 : 1;
+
+        html2canvas(element, {
+            backgroundColor: '#020202',
+            scale: scaleValue,
+            useCORS: true,
+            allowTaint: true, // helps with some image loading
+            logging: false,
+            // scrollX and Y can sometimes help with shifted mobile renders
+            scrollX: 0,
+            scrollY: -window.scrollY
+        }).then(canvas => {
+            // Restore origin style
+            element.style.backgroundColor = originalBg;
+            element.style.padding = originalPadding;
+            element.style.borderRadius = originalRadius;
+
+            try {
+                const imgData = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = filename;
+                link.href = imgData;
+
+                // Append, click, remove - much safer for mobile browsers
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } catch (err) {
+                console.error("Canvas toDataURL failed: ", err);
+                alert("Tu navegador móvil bloqueó la descarga de la imagen por seguridad. Intenta desde un PC.");
+            }
+        }).catch(err => {
+            console.error("Export Error: ", err);
+            alert("Hubo un error al generar la imagen. Intenta de nuevo.");
+            element.style.backgroundColor = originalBg;
+            element.style.padding = originalPadding;
+            element.style.borderRadius = originalRadius;
+        });
+    }
+
+    const btnExportLeague = document.getElementById('btn-export-league');
+    if (btnExportLeague) {
+        btnExportLeague.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Wrap the table or just target the parent module to get the whole leaderboard
+            exportToPNG('league-view', 'ElFixture_Liga.png');
+        });
+    }
+
+    const btnExportChampion = document.getElementById('btn-export-champion');
+    if (btnExportChampion) {
+        btnExportChampion.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent vortex closing
+            e.preventDefault();
+            exportToPNG('champion-export-area', 'ElFixture_Campeon.png');
+        });
+    }
+
 });

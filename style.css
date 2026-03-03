@@ -911,6 +911,47 @@ body {
         padding-right: 40px;
         /* Extra padding for swipe */
     }
+
+    /* League Dashboard Mobile Layout */
+    .league-split-grid {
+        display: flex;
+        flex-direction: column-reverse;
+        /* Leaderboard on top, Calendar on bottom */
+        gap: var(--gap-lg);
+    }
+
+    .leaderboard-module {
+        overflow-x: auto;
+        /* Allow horizontal scroll for the table if it doesn't fit */
+        padding: var(--gap-md);
+    }
+
+    .calendar-module {
+        padding: var(--gap-md);
+    }
+
+    .export-container {
+        margin-top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        z-index: 999;
+    }
+
+    .export-container .action-btn {
+        width: 100%;
+        font-size: 0.8rem;
+        padding: 10px;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .victory-vortex .export-container {
+        position: relative;
+        z-index: 1000;
+        bottom: 20px;
+        margin-top: 0;
+    }
 }
 
 @media (max-width: 480px) {
@@ -950,4 +991,127 @@ body {
         transform: scale(1);
         filter: brightness(1) drop-shadow(0 0 5px var(--energy-secondary));
     }
+}
+
+/* =========================================================================
+   Epic 3: Legal Footer & Modals
+   ========================================================================= */
+
+.neon-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    margin-top: 40px;
+    border-top: 1px solid rgba(0, 243, 255, 0.2);
+    margin-bottom: 60px;
+    /* Space for AdSense bottom banner */
+}
+
+.footer-links {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.legal-link {
+    color: rgba(255, 255, 255, 0.6);
+    text-decoration: none;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.legal-link:hover {
+    color: var(--energy-secondary);
+    text-shadow: 0 0 10px var(--energy-secondary);
+}
+
+.separator {
+    color: rgba(0, 243, 255, 0.3);
+}
+
+.footer-copyright {
+    color: rgba(255, 255, 255, 0.4);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.75rem;
+}
+
+/* Cyber Modals */
+.cyber-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(2, 2, 2, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.cyber-modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.cyber-modal {
+    width: 90%;
+    max-width: 600px;
+    background: rgba(10, 10, 15, 0.9);
+    padding: 30px;
+    position: relative;
+    border: 1px solid var(--energy-secondary);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.cyber-modal-overlay.active .cyber-modal {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: var(--energy-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    color: var(--energy-primary);
+    text-shadow: 0 0 10px var(--energy-primary);
+    transform: scale(1.1);
+}
+
+.modal-content p {
+    color: var(--accent-white);
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Export Tool */
+.export-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }

@@ -5,11 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElFixture | Tournament Hub - Tron 2050 Edition</title>
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&family=Roboto+Mono:wght@400;700&display=swap"
         rel="stylesheet">
+
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"
+        integrity="sha512-BNaRQmJbioE9FxyRjqSOh1T1012WeB36vXk91b1A0Xm2lAof7z5B5XNqofT4/iF2N3D3bMpx6z+6O21C/Jb2Q=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 
@@ -156,6 +163,13 @@
                                 <!-- Populated by JS -->
                             </tbody>
                         </table>
+
+                        <!-- Export Tool -->
+                        <div class="export-container">
+                            <button class="action-btn secondary" id="btn-export-league">
+                                <span class="orbitron-text">📸 EXPORTAR TABLA PARA INSTAGRAM</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -164,21 +178,87 @@
         <!-- The Victory Vortex -->
         <div class="victory-vortex" id="victory-overlay">
             <div class="particles"></div>
-            <div class="champion-display">
-                <img src="Logo.png" alt="Trophy" class="trophy-bloom">
+            <div class="champion-display" id="champion-export-area">
+                <img src="Logo.png" alt="Trophy" class="trophy-bloom" crossorigin="anonymous">
                 <h1 class="orbitron-text victory-title">¡CAMPEÓN!</h1>
                 <h2 class="roboto-mono winner-name">EQUIPO_ALPHA</h2>
             </div>
+            <!-- Export Tool -->
+            <div class="export-container" style="margin-top: 30px; position: relative; z-index: 10;">
+                <button class="action-btn secondary" id="btn-export-champion">
+                    <span class="orbitron-text">📸 EXPORTAR CAMPEÓN PARA INSTAGRAM</span>
+                </button>
+            </div>
         </div>
 
-    </main>
+        <!-- Neon Footer -->
+        <footer class="neon-footer panel-glass">
+            <div class="footer-links">
+                <a href="#" class="legal-link" data-modal="modal-privacy">Política de Privacidad</a>
+                <span class="separator">|</span>
+                <a href="#" class="legal-link" data-modal="modal-cookies">Política de Cookies</a>
+                <span class="separator">|</span>
+                <a href="#" class="legal-link" data-modal="modal-terms">Términos de Contenido</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2026 ElFixture.com - Sistema de Competición.
+            </div>
+        </footer>
 
-    <!-- Bottom Ad Banner -->
-    <div class="ad-banner-bottom">
-        <span>ESPACIO PUBLICITARIO - GOOGLE ADSENSE</span>
-    </div>
+        <!-- Legal Modals -->
+        <div class="cyber-modal-overlay" id="modal-privacy">
+            <div class="cyber-modal panel-glass">
+                <button class="modal-close">&times;</button>
+                <h3 class="orbitron-text glow-text">POLÍTICA DE PRIVACIDAD</h3>
+                <div class="modal-content roboto-mono">
+                    <p>En ElFixture.com respetamos su privacidad al máximo nivel.</p>
+                    <p><strong>No solicitamos registro ni datos personales.</strong> Usted es libre de usar nuestra
+                        plataforma de forma completamente anónima.</p>
+                    <p>No almacenamos los nombres de los equipos ni los resultados de los torneos en bases de datos
+                        permanentes. El uso del sistema es completamente temporal, procesado en la memoria de su
+                        navegador (Local Storage) durante su sesión actual.</p>
+                </div>
+            </div>
+        </div>
 
-    <script src="script.js?v=3.0"></script>
+        <div class="cyber-modal-overlay" id="modal-cookies">
+            <div class="cyber-modal panel-glass">
+                <button class="modal-close">&times;</button>
+                <h3 class="orbitron-text glow-text">POLÍTICA DE COOKIES</h3>
+                <div class="modal-content roboto-mono">
+                    <p><strong>ElFixture.com no utiliza cookies de seguimiento propias.</strong></p>
+                    <p>Sin embargo, para mantener el funcionamiento gratuito de este motor de torneos, utilizamos Google
+                        AdSense para la monetización. Redes publicitarias de terceros (como Google AdSense) pueden
+                        utilizar cookies de terceros para mostrar anuncios personalizados y analizar el tráfico
+                        publicitario.</p>
+                    <p>Al utilizar esta herramienta, usted acepta el uso estándar de dichas cookies publicitarias
+                        requeridas por nuestros patrocinadores.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="cyber-modal-overlay" id="modal-terms">
+            <div class="cyber-modal panel-glass">
+                <button class="modal-close">&times;</button>
+                <h3 class="orbitron-text glow-text">TÉRMINOS DE CONTENIDO</h3>
+                <div class="modal-content roboto-mono">
+                    <p>Uso Legítimo y Gratuito.</p>
+                    <p><strong>Responsabilidad del Usuario:</strong> El usuario asume la total responsabilidad por los
+                        nombres de los equipos y torneos ingresados. ElFixture.com opera como un entorno neutral y
+                        algorítmico. No mantenemos repositorios, capturas ni backups del contenido generado por los
+                        usuarios en las llaves interactivas.</p>
+                    <p>Todo el daño o infracción originada por el texto introducido es responsabilidad estricta de quien
+                        manipula la sesión local.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom AdSense Banner -->
+        <div class="ad-banner ad-banner-bottom">
+            <span>ESPACIO PUBLICITARIO - GOOGLE ADSENSE</span>
+        </div>
+
+        <script src="script.js?v=3.0"></script>
 </body>
 
 </html>
