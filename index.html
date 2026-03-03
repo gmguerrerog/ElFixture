@@ -1,48 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElFixture | Tournament Hub - Tron 2050 Edition</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <!-- The Deep Grid Background -->
     <div class="void-bg"></div>
     <div class="perspective-grid"></div>
-    
+
+    <!-- Top Ad Banner -->
+    <div class="ad-banner-top">
+        <span>ESPACIO PUBLICITARIO - GOOGLE ADSENSE</span>
+    </div>
+
     <!-- Live Feedback Scanner -->
     <div class="laser-scanner"></div>
 
-    <main class="console-viewport">
-        
+    <main class="console-viewport has-ads">
+
         <!-- Header: Command Bar -->
         <header class="command-bar panel-glass">
             <div class="logo-container">
                 <img src="Logo.png" alt="ElFixture Logo" class="bloom-logo">
             </div>
-            
+
             <div class="status-indicators">
+                <div class="team-size-selector">
+                    <button class="mode-btn active" id="btn-8-teams">8 EQUIPOS</button>
+                    <button class="mode-btn" id="btn-16-teams">16 EQUIPOS</button>
+                </div>
+
                 <div class="latency-sync">
                     <span class="pulse-dot active"></span>
-                    <span class="orbitron-text">SYNC: 12ms</span>
+                    <span class="orbitron-text">SYNC: 12ms (ADMIN)</span>
                 </div>
-                
+
                 <div class="mode-selector">
                     <button class="mode-btn active" id="btn-football">
-                        <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                            <path d="M2 12h20" />
+                        </svg>
                         FÚTBOL
                     </button>
                     <button class="mode-btn" id="btn-esports">
-                        <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor"><path d="M6 12L10 8L14 12L18 8V16H6V12Z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor">
+                            <path d="M6 12L10 8L14 12L18 8V16H6V12Z" />
+                        </svg>
                         E-SPORTS
                     </button>
                 </div>
             </div>
-            
+
             <button class="share-btn" id="btn-share">
                 <span class="ripple-effect"></span>
                 <span class="orbitron-text">COMPARTIR</span>
@@ -51,121 +71,19 @@
 
         <!-- Neural Input Module -->
         <section class="neural-input-module panel-glass">
-            <h2 class="orbitron-text glow-text">INITIATE TEAMS</h2>
-            <div class="input-grid">
-                <div class="input-slot">
-                    <span class="slot-id">01</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_ALPHA">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">02</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_BETA">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">03</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_GAMMA">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">04</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_DELTA">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">05</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_EPSILON">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">06</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_ZETA">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">07</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_ETA">
-                    <div class="laser-border"></div>
-                </div>
-                <div class="input-slot">
-                    <span class="slot-id">08</span>
-                    <input type="text" class="neural-input" placeholder="TEAM_THETA">
-                    <div class="laser-border"></div>
-                </div>
+            <h2 class="orbitron-text glow-text">INICIAR TORNEO</h2>
+            <div class="input-grid" id="input-grid-container">
+                <!-- Dynamically populated by JS -->
             </div>
             <button class="action-btn primary" id="generate-bracket">
-                <span class="orbitron-text">ENGAGE BRACKET</span>
+                <span class="orbitron-text">GENERAR FIXTURE</span>
             </button>
         </section>
 
         <!-- The Kinetic Structure (Bracket) -->
         <section class="bracket-container" id="bracket-view" style="display: none;">
-            <div class="hyper-bento-grid">
-                <!-- Round 1 -->
-                <div class="round round-1">
-                    <div class="matchup">
-                        <div class="node team-a panel-glass">
-                            <span class="team-name roboto-mono">TEAM_ALPHA</span>
-                            <div class="laser-border"></div>
-                        </div>
-                        <div class="energy-connector cyan-pulse"></div>
-                        <div class="node team-b panel-glass">
-                            <span class="team-name roboto-mono">TEAM_BETA</span>
-                            <div class="laser-border"></div>
-                        </div>
-                    </div>
-                    <div class="matchup">
-                        <div class="node team-a panel-glass">
-                            <span class="team-name roboto-mono">TEAM_GAMMA</span>
-                            <div class="laser-border"></div>
-                        </div>
-                        <div class="energy-connector"></div>
-                        <div class="node team-b panel-glass">
-                            <span class="team-name roboto-mono">TEAM_DELTA</span>
-                            <div class="laser-border"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Connectors Level 1 to 2 -->
-                <div class="connector-column">
-                    <svg class="bracket-lines" width="100%" height="100%">
-                        <path class="line-path" d="M0,25 C50,25 50,75 100,75" />
-                        <path class="line-path" d="M0,125 C50,125 50,75 100,75" />
-                    </svg>
-                </div>
-
-                <!-- Round 2 (Semifinals) -->
-                <div class="round round-2">
-                    <div class="matchup">
-                        <div class="node empty panel-glass waiting">
-                            <span class="team-name roboto-mono">AWAITING</span>
-                            <div class="laser-border"></div>
-                        </div>
-                        <div class="energy-connector"></div>
-                        <div class="node empty panel-glass waiting">
-                            <span class="team-name roboto-mono">AWAITING</span>
-                            <div class="laser-border"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Connectors Level 2 to Final -->
-                <div class="connector-column">
-                    <svg class="bracket-lines" width="100%" height="100%">
-                        <path class="line-path" d="M0,75 C50,75 50,75 100,75" />
-                    </svg>
-                </div>
-
-                <!-- Final -->
-                <div class="round round-final">
-                    <div class="node final-node panel-glass">
-                        <div class="shield-icon glow-orange"></div>
-                        <span class="team-name orbitron-text">CHAMPION</span>
-                        <div class="laser-border primary-glow"></div>
-                    </div>
-                </div>
+            <div class="hyper-bento-grid" id="bracket-grid">
+                <!-- Dynamically populated by JS -->
             </div>
         </section>
 
@@ -174,13 +92,19 @@
             <div class="particles"></div>
             <div class="champion-display">
                 <img src="Logo.png" alt="Trophy" class="trophy-bloom">
-                <h1 class="orbitron-text victory-title">VICTORY</h1>
-                <h2 class="roboto-mono winner-name">TEAM_ALPHA</h2>
+                <h1 class="orbitron-text victory-title">¡CAMPEÓN!</h1>
+                <h2 class="roboto-mono winner-name">EQUIPO_ALPHA</h2>
             </div>
         </div>
 
     </main>
 
+    <!-- Bottom Ad Banner -->
+    <div class="ad-banner-bottom">
+        <span>ESPACIO PUBLICITARIO - GOOGLE ADSENSE</span>
+    </div>
+
     <script src="script.js"></script>
 </body>
+
 </html>
