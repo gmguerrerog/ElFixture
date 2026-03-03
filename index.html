@@ -26,47 +26,61 @@
     <!-- Live Feedback Scanner -->
     <div class="laser-scanner"></div>
 
+    <!-- Epic Audio Track -->
+    <audio id="epic-audio" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3" type="audio/mpeg">
+    </audio>
+
     <main class="console-viewport has-ads">
 
         <!-- Header: Command Bar -->
         <header class="command-bar panel-glass">
-            <a href="#" class="logo-container" id="logo-home">
-                <img src="Logo.png" alt="ElFixture Logo" class="bloom-logo">
+
+            <!-- Centered Header Logo -->
+            <a href="#" class="logo-container top-center" id="logo-home">
+                <img src="Logo.png" alt="ElFixture Logo" class="bloom-logo xl">
             </a>
 
-            <div class="status-indicators">
-                <div class="team-size-selector">
-                    <button class="mode-btn active" id="btn-8-teams">8 EQUIPOS</button>
-                    <button class="mode-btn" id="btn-16-teams">16 EQUIPOS</button>
+            <div class="controls-row">
+                <div class="status-indicators">
+                    <div class="team-size-selector">
+                        <button class="mode-btn active" id="btn-8-teams">8 EQUIPOS</button>
+                        <button class="mode-btn" id="btn-16-teams">16 EQUIPOS</button>
+                    </div>
+
+                    <div class="latency-sync">
+                        <span class="pulse-dot active"></span>
+                        <span class="orbitron-text">SYNC: 12ms (ADMIN)</span>
+                    </div>
+
+                    <div class="mode-selector">
+                        <button class="mode-btn active" id="btn-football">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+                                <path d="M2 12h20" />
+                            </svg>
+                            FÚTBOL
+                        </button>
+                        <button class="mode-btn" id="btn-esports">
+                            <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor">
+                                <path d="M6 12L10 8L14 12L18 8V16H6V12Z" />
+                            </svg>
+                            E-SPORTS
+                        </button>
+                    </div>
                 </div>
 
-                <div class="latency-sync">
-                    <span class="pulse-dot active"></span>
-                    <span class="orbitron-text">SYNC: 12ms (ADMIN)</span>
-                </div>
-
-                <div class="mode-selector">
-                    <button class="mode-btn active" id="btn-football">
-                        <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
-                            <path d="M2 12h20" />
-                        </svg>
-                        FÚTBOL
+                <div class="action-buttons-row">
+                    <button class="share-btn audio-btn" id="btn-audio">
+                        <span class="orbitron-text">MÚSICA: OFF</span>
                     </button>
-                    <button class="mode-btn" id="btn-esports">
-                        <svg viewBox="0 0 24 24" fill="none" class="icon" stroke="currentColor">
-                            <path d="M6 12L10 8L14 12L18 8V16H6V12Z" />
-                        </svg>
-                        E-SPORTS
+                    <button class="share-btn" id="btn-share">
+                        <span class="ripple-effect"></span>
+                        <span class="orbitron-text">COMPARTIR</span>
                     </button>
                 </div>
             </div>
-
-            <button class="share-btn" id="btn-share">
-                <span class="ripple-effect"></span>
-                <span class="orbitron-text">COMPARTIR</span>
-            </button>
         </header>
 
         <!-- Neural Input Module -->

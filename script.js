@@ -146,6 +146,48 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Audio Controls ---
+    const btnAudio = document.getElementById('btn-audio');
+    const epicAudio = document.getElementById('epic-audio');
+
+    if (btnAudio && epicAudio) {
+        epicAudio.volume = 0.4;
+        let userPaused = false;
+
+        function attemptPlay() {
+            if (userPaused) return;
+            epicAudio.play().then(() => {
+                btnAudio.querySelector('.orbitron-text').innerText = '🎵 MÚSICA: ON';
+                btnAudio.classList.add('playing');
+            }).catch(e => {
+                console.log("Auto-play prevented by browser. Wait for user interaction.");
+                btnAudio.querySelector('.orbitron-text').innerText = '🎵 MÚSICA: OFF';
+                btnAudio.classList.remove('playing');
+            });
+        }
+
+        // Try to play immediately
+        attemptPlay();
+
+        // Any user interaction will trigger playback if it was blocked
+        document.body.addEventListener('click', () => {
+            if (epicAudio.paused) attemptPlay();
+        }, { once: true });
+
+        btnAudio.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent body click from firing simultaneously
+            if (epicAudio.paused || userPaused) {
+                userPaused = false;
+                attemptPlay();
+            } else {
+                epicAudio.pause();
+                userPaused = true;
+                btnAudio.querySelector('.orbitron-text').innerText = '🎵 MÚSICA: OFF';
+                btnAudio.classList.remove('playing');
+            }
+        });
+    }
+
     // --- 3. Bracket Generation ---
     const btnGenerate = document.getElementById('generate-bracket');
 
