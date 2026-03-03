@@ -754,3 +754,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 });
+
+// --- Epic 4: PWA Installation Logic ---
+let deferredPrompt;
+const pwaInstallPrompt = document.getElementById('pwa-install-prompt');
+const btnInstallPwa = document.getElementById('btn-install-pwa');
+const btnClosePwa = document.getElementById('btn-close-pwa');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67+ from showing the mini-infobar automatically
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+
+    // Ensure the prompt only shows if we are not already installed
+    // We'll show our custom UI
+    if (pwaInstallPrompt) {
+        pwaInstallPrompt.style.display = 'flex';
+    }
+});
+
+if (btnInstallPwa) {
+    btnInstallPwa.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            // Show the official browser install prompt
+            deferredPrompt.prompt();
+
+            // Wait for the user to respond to the prompt
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to the install prompt: ${outcome}`);
+
+            // We've used the prompt, and can't use it again, discard it
+            deferredPrompt = null;
+        }
+        // Hide our custom UI
+        if (pwaInstallPrompt) {
+            pwaInstallPrompt.style.display = 'none';
+        }
+    });
+}
+
+if (btnClosePwa) {
+    btnClosePwa.addEventListener('click', () => {
+        if (pwaInstallPrompt) {
+            pwaInstallPrompt.style.display = 'none';
+        }
+    });
+}

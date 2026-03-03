@@ -1051,10 +1051,78 @@ body {
     transform: scale(1.1);
 }
 
+/* Legal Modal texts */
 .modal-content p {
     color: var(--accent-white);
     line-height: 1.6;
     margin-bottom: 15px;
     font-size: 0.9rem;
     opacity: 0.8;
+}
+
+/* =========================================================================
+   Epic 4: PWA Install Prompt
+   ========================================================================= */
+
+.pwa-install-prompt {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 600px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 1px solid var(--energy-secondary);
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+    z-index: 10000;
+    border-radius: var(--border-radius);
+    gap: 15px;
+    animation: slide-down 0.5s ease-out forwards;
+}
+
+@keyframes slide-down {
+    from {
+        top: -100px;
+        opacity: 0;
+    }
+
+    to {
+        top: 20px;
+        opacity: 1;
+    }
+}
+
+.pwa-content {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1;
+}
+
+.pwa-content .orbitron-text {
+    color: var(--energy-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.pwa-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+}
+
+#btn-install-pwa {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.pwa-close {
+    position: relative;
+    top: 0;
+    right: 0;
+    font-size: 1.2rem;
 }

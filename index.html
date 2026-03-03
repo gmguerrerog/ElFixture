@@ -2,8 +2,6 @@
 <html lang="es">
 
 <head>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1126434521547575"
-     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElFixture | Tournament Hub - Tron 2050 Edition</title>
@@ -14,8 +12,9 @@
         href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&family=Roboto+Mono:wght@400;700&display=swap"
         rel="stylesheet">
 
-
-
+    <!-- PWA Setup -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00F3FF">
     <link rel="stylesheet" href="style.css?v=3.0">
 </head>
 
@@ -35,6 +34,16 @@
     </audio>
 
     <main class="console-viewport has-ads">
+
+        <!-- PWA Install Prompt (Hidden by default) -->
+        <div id="pwa-install-prompt" class="pwa-install-prompt panel-glass" style="display: none;">
+            <div class="pwa-content">
+                <span class="orbitron-text">MÓDULO DE INSTALACIÓN DISPONIBLE</span>
+                <span class="roboto-mono pwa-desc">Instala ElFixture como aplicación nativa.</span>
+            </div>
+            <button id="btn-install-pwa" class="action-btn primary small">INSTALAR APP</button>
+            <button id="btn-close-pwa" class="modal-close pwa-close">&times;</button>
+        </div>
 
         <!-- Header: Command Bar -->
         <header class="command-bar panel-glass">
@@ -240,7 +249,22 @@
 
 
 
-        <script src="script.js?v=3.0"></script>
+        <script src="script.js?v=4.0"></script>
+
+        <!-- PWA Service Worker Registration -->
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js')
+                        .then(registration => {
+                            console.log('SW Registered: ', registration);
+                        })
+                        .catch(err => {
+                            console.log('SW Registration Failed: ', err);
+                        });
+                });
+            }
+        </script>
 </body>
 
 </html>
