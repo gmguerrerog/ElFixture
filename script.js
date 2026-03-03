@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bracketView = document.getElementById('bracket-view');
     const leagueView = document.getElementById('league-view');
     const promoBanner = document.getElementById('promo-banner');
+    const neonFooter = document.querySelector('.neon-footer');
     const btn8 = document.getElementById('btn-8-teams');
     const btn16 = document.getElementById('btn-16-teams');
 
@@ -346,6 +347,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showBracket() {
         inputModule.style.display = 'none';
         if (promoBanner) promoBanner.style.display = 'none';
+        if (neonFooter) neonFooter.style.display = 'none';
         if (leagueView) leagueView.style.display = 'none';
         bracketView.style.display = 'flex';
         renderBracket(appState.teams);
@@ -355,8 +357,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function showLeague() {
         inputModule.style.display = 'none';
         if (promoBanner) promoBanner.style.display = 'none';
+        if (neonFooter) neonFooter.style.display = 'none';
         bracketView.style.display = 'none';
-        if (leagueView) leagueView.style.display = 'block'; // Or flex depending on layout needs, but display:block works over the container
+        if (leagueView) leagueView.style.display = 'block';
         renderCalendar();
         renderLeaderboard();
     }
@@ -748,83 +751,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- Epic 3: HTML2Canvas Export Logic ---
-    function exportToPNG(elementId, filename) {
-        const element = document.getElementById(elementId);
-        if (!element) return;
 
-        // Save original styles explicitly
-        const originalBg = element.style.backgroundColor || '';
-        const originalPadding = element.style.padding || '';
-        const originalRadius = element.style.borderRadius || '';
-
-        // Force a solid dark background so transparent areas don't render black weirdly
-        element.style.backgroundColor = '#020202';
-        element.style.padding = '20px';
-        element.style.borderRadius = '10px';
-
-        // Use a safe scale for mobile (devicePixelRatio often crashes iOS if too high)
-        const scaleValue = window.devicePixelRatio > 1 ? 2 : 1;
-
-        html2canvas(element, {
-            backgroundColor: '#020202',
-            scale: scaleValue,
-            useCORS: true,
-            allowTaint: true, // helps with some image loading
-            logging: false,
-            // scrollX and Y can sometimes help with shifted mobile renders
-            scrollX: 0,
-            scrollY: -window.scrollY
-        }).then(canvas => {
-            // Restore origin style
-            element.style.backgroundColor = originalBg;
-            element.style.padding = originalPadding;
-            element.style.borderRadius = originalRadius;
-
-            canvas.toBlob(function (blob) {
-                if (!blob) {
-                    alert("Tu navegador móvil bloqueó la descarga de la imagen por seguridad. Intenta desde un PC.");
-                    return;
-                }
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.download = filename;
-                link.href = url;
-
-                // Append, click, remove - much safer for mobile browsers
-                document.body.appendChild(link);
-                link.click();
-
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                }, 100);
-            }, 'image/png');
-        }).catch(err => {
-            console.error("Export Error: ", err);
-            alert("Hubo un error al generar la imagen. Intenta de nuevo.");
-            element.style.backgroundColor = originalBg;
-            element.style.padding = originalPadding;
-            element.style.borderRadius = originalRadius;
-        });
-    }
-
-    const btnExportLeague = document.getElementById('btn-export-league');
-    if (btnExportLeague) {
-        btnExportLeague.addEventListener('click', (e) => {
-            e.preventDefault();
-            // Wrap the table or just target the parent module to get the whole leaderboard
-            exportToPNG('league-view', 'ElFixture_Liga.png');
-        });
-    }
-
-    const btnExportChampion = document.getElementById('btn-export-champion');
-    if (btnExportChampion) {
-        btnExportChampion.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent vortex closing
-            e.preventDefault();
-            exportToPNG('champion-export-area', 'ElFixture_Campeon.png');
-        });
-    }
 
 });
