@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- State & Sync ---
-    const LOCAL_STORAGE_KEY = 'elfixture_tournament_state';
+    let tournamentId = window.location.hash.replace('#', '');
+    let LOCAL_STORAGE_KEY = tournamentId ? `elfixture_${tournamentId}` : 'elfixture_draft';
+
     let appState = loadState() || {
         isStarted: false,
         teamCount: 8,
@@ -25,6 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
             pulse.style.backgroundColor = '#FFFFFF';
             setTimeout(() => pulse.style.backgroundColor = 'var(--energy-secondary)', 200);
         }
+    }
+
+    // Logo Home Reset
+    const logoHome = document.getElementById('logo-home');
+    if (logoHome) {
+        logoHome.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Clear default draft to avoid getting stuck
+            localStorage.removeItem('elfixture_draft');
+
+            // Redirect to base path without hash or query params
+            window.location.href = window.location.pathname;
+        });
     }
 
     // --- Elements ---
@@ -102,22 +117,29 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- 2. Share Button Pulse ---
+    // --- 2. Share Button Pulse & WhatsApp ---
     const btnShare = document.getElementById('btn-share');
     if (btnShare) {
         btnShare.addEventListener('click', function (e) {
             const originalText = this.querySelector('.orbitron-text').innerText;
-            if (originalText.includes("LIVE")) return;
+            if (originalText.includes("ENVIADO")) return;
 
-            this.querySelector('.orbitron-text').innerText = "LINK: EN VIVO";
+            if (!appState.isStarted || !tournamentId) {
+                alert("Primero genera el torneo para poder compartirlo.");
+                return;
+            }
+
+            this.querySelector('.orbitron-text').innerText = "LINK ENVIADO";
             this.style.borderColor = "var(--energy-secondary)";
             this.style.color = "var(--energy-secondary)";
 
-            // To properly mock sharing across tabs on the same machine
-            alert("El torneo está en vivo. Ahora puedes abrir otra pestaña de index.html para ver los cambios en tiempo real (gracias al LocalStorage Sync).");
+            // Generate WhatsApp Link
+            const currentUrl = window.location.href;
+            const message = encodeURIComponent(`¡Sigue el torneo de ElFixture.com en vivo!\nEntra aquí para ver los resultados en tiempo real: ${currentUrl}`);
+            window.open(`https://wa.me/?text=${message}`, '_blank');
 
             setTimeout(() => {
-                this.querySelector('.orbitron-text').innerText = originalText;
+                this.querySelector('.orbitron-text').innerText = "COMPARTIR";
                 this.style.borderColor = "var(--energy-primary)";
                 this.style.color = "var(--energy-primary)";
             }, 3000);
@@ -129,6 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnGenerate) {
         btnGenerate.addEventListener('click', () => {
+            // If it's a new draft, generate an ID and update URL
+            if (!tournamentId) {
+                tournamentId = Math.random().toString(36).substr(2, 9);
+                LOCAL_STORAGE_KEY = `elfixture_${tournamentId}`;
+                window.location.hash = tournamentId;
+            }
+
             appState.teams = [];
             for (let i = 1; i <= appState.teamCount; i++) {
                 const input = document.getElementById(`team-input-${i}`);
