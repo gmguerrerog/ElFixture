@@ -599,6 +599,168 @@ body {
     filter: drop-shadow(0 0 10px var(--energy-primary));
 }
 
+/* --- League Mode Configuration --- */
+.system-mode-selector {
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 20px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.league-config {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+}
+
+.neural-input.small {
+    width: 60px;
+    padding: 6px;
+    text-align: center;
+    border: 1px solid rgba(0, 243, 255, 0.3);
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+/* --- League Dashboard View --- */
+.league-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    overflow: auto;
+    position: relative;
+    padding: var(--gap-lg);
+    width: 100%;
+}
+
+.league-split-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--gap-xl);
+    width: 100%;
+    max-width: 1400px;
+}
+
+/* Match Calendar */
+.calendar-module {
+    padding: var(--gap-lg);
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 350px);
+    overflow-y: auto;
+}
+
+.glow-text.sm {
+    font-size: 1.2rem;
+    margin-bottom: var(--gap-lg);
+    text-align: left;
+}
+
+.matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-lg);
+}
+
+.match-card {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.match-team {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-white);
+    flex: 1;
+}
+
+.match-team.right {
+    text-align: right;
+}
+
+.score-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 10px;
+}
+
+.score-input {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid var(--energy-secondary);
+    color: var(--energy-secondary);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    text-align: center;
+    border-radius: 4px;
+}
+
+/* Leaderboard */
+.leaderboard-module {
+    padding: var(--gap-lg);
+    display: flex;
+    flex-direction: column;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Roboto Mono', monospace;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+.leaderboard-table th {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--energy-secondary);
+    padding: 12px 8px;
+    border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+    text-align: center;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+.leaderboard-table th.text-left {
+    text-align: left;
+}
+
+.leaderboard-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    text-align: center;
+}
+
+.leaderboard-table td.text-left {
+    text-align: left;
+    color: var(--accent-white);
+}
+
+.leaderboard-row:hover {
+    background: rgba(0, 243, 255, 0.05);
+}
+
+.leaderboard-row.rank-1 td {
+    color: var(--energy-primary);
+    font-weight: bold;
+}
+
+.leaderboard-row.rank-1 td.text-left {
+    text-shadow: 0 0 10px rgba(255, 138, 0, 0.5);
+}
+
 /* Victory Vortex Overlay */
 .victory-vortex {
     position: absolute;

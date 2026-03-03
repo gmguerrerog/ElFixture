@@ -6,10 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let appState = loadState() || {
         isStarted: false,
+        tournamentType: 'bracket', // 'bracket' or 'league'
         teamCount: 8,
         mode: 'football',
+        leagueConfig: { rounds: 1 },
         teams: [],
-        bracketState: {} // e.g. "r1-m0": "TEAM A" (winners)
+        bracketState: {},
+        matches: [] // For league match history
     };
 
     function loadState() {
@@ -47,12 +50,71 @@ document.addEventListener('DOMContentLoaded', () => {
     const bracketGrid = document.getElementById('bracket-grid');
     const inputModule = document.querySelector('.neural-input-module');
     const bracketView = document.getElementById('bracket-view');
+    const leagueView = document.getElementById('league-view');
     const btn8 = document.getElementById('btn-8-teams');
     const btn16 = document.getElementById('btn-16-teams');
 
     // --- 1. Mode Selectors ---
     const btnFootball = document.getElementById('btn-football');
     const btnEsports = document.getElementById('btn-esports');
+
+    // --- 1.1 System Mode (Bracket vs League) ---
+    const btnElimination = document.getElementById('btn-elimination');
+    const btnLeague = document.getElementById('btn-league');
+    const eliminationConfig = document.getElementById('elimination-config');
+    const leagueConfig = document.getElementById('league-config');
+    const leagueTeamCount = document.getElementById('league-team-count');
+    const btn1Round = document.getElementById('btn-1-round');
+    const btn2Rounds = document.getElementById('btn-2-rounds');
+
+    function setTournamentType(type) {
+        appState.tournamentType = type;
+        saveState();
+        if (type === 'bracket') {
+            if (btnElimination) btnElimination.classList.add('active');
+            if (btnLeague) btnLeague.classList.remove('active');
+            if (eliminationConfig) eliminationConfig.style.display = 'flex';
+            if (leagueConfig) leagueConfig.style.display = 'none';
+            setTeamSize(appState.teamCount || 8);
+        } else {
+            if (btnLeague) btnLeague.classList.add('active');
+            if (btnElimination) btnElimination.classList.remove('active');
+            if (eliminationConfig) eliminationConfig.style.display = 'none';
+            if (leagueConfig) leagueConfig.style.display = 'flex';
+            setTeamSize(parseInt(leagueTeamCount.value) || 4);
+        }
+    }
+
+    if (btnElimination && btnLeague) {
+        btnElimination.addEventListener('click', () => setTournamentType('bracket'));
+        btnLeague.addEventListener('click', () => setTournamentType('league'));
+    }
+
+    if (leagueTeamCount) {
+        leagueTeamCount.addEventListener('input', (e) => {
+            let count = parseInt(e.target.value);
+            if (count > 20) count = 20;
+            if (count < 3) count = 3;
+            setTeamSize(count);
+        });
+    }
+
+    function setLeagueRounds(rounds) {
+        appState.leagueConfig.rounds = rounds;
+        saveState();
+        if (rounds === 1) {
+            if (btn1Round) btn1Round.classList.add('active');
+            if (btn2Rounds) btn2Rounds.classList.remove('active');
+        } else {
+            if (btn2Rounds) btn2Rounds.classList.add('active');
+            if (btn1Round) btn1Round.classList.remove('active');
+        }
+    }
+
+    if (btn1Round && btn2Rounds) {
+        btn1Round.addEventListener('click', () => setLeagueRounds(1));
+        btn2Rounds.addEventListener('click', () => setLeagueRounds(2));
+    }
 
     function setMode(mode) {
         appState.mode = mode;
@@ -203,21 +265,234 @@ document.addEventListener('DOMContentLoaded', () => {
             appState.teams = [];
             for (let i = 1; i <= appState.teamCount; i++) {
                 const input = document.getElementById(`team-input-${i}`);
-                appState.teams.push(input.value || input.placeholder);
+                if (input) appState.teams.push(input.value || input.placeholder);
             }
             appState.isStarted = true;
-            appState.bracketState = {}; // Reset bracket history
-            saveState();
 
-            showBracket();
+            if (appState.tournamentType === 'bracket') {
+                appState.bracketState = {}; // Reset bracket history
+                saveState();
+                showBracket();
+            } else {
+                generateLeagueSchedule();
+                saveState();
+                showLeague();
+            }
         });
+    }
+
+    // --- League Schedule Algorithm (Round-Robin) ---
+    function generateLeagueSchedule() {
+        let teams = [...appState.teams];
+        if (teams.length % 2 !== 0) {
+            teams.push(null); // 'null' acts as a Bye
+        }
+
+        const numTeams = teams.length;
+        const totalRounds = numTeams - 1;
+        const matchesPerRound = numTeams / 2;
+        let matches = [];
+        let matchIndex = 0;
+
+        for (let round = 0; round < totalRounds; round++) {
+            for (let match = 0; match < matchesPerRound; match++) {
+                const home = (round + match) % (numTeams - 1);
+                let away = (numTeams - 1 - match + round) % (numTeams - 1);
+
+                if (match === 0) {
+                    away = numTeams - 1;
+                }
+
+                let homeTeam = teams[home];
+                let awayTeam = teams[away];
+
+                if (match === 0 && round % 2 !== 0) {
+                    let temp = homeTeam;
+                    homeTeam = awayTeam;
+                    awayTeam = temp;
+                }
+
+                if (homeTeam !== null && awayTeam !== null) {
+                    matches.push({
+                        id: `match-${matchIndex++}`,
+                        round: round + 1,
+                        home: homeTeam,
+                        away: awayTeam,
+                        scoreHome: null,
+                        scoreAway: null
+                    });
+                }
+            }
+        }
+
+        if (appState.leagueConfig && appState.leagueConfig.rounds === 2) {
+            const firstHalfPairs = [...matches];
+            firstHalfPairs.forEach(m => {
+                matches.push({
+                    id: `match-${matchIndex++}`,
+                    round: m.round + totalRounds,
+                    home: m.away,
+                    away: m.home,
+                    scoreHome: null,
+                    scoreAway: null
+                });
+            });
+        }
+
+        appState.matches = matches;
     }
 
     function showBracket() {
         inputModule.style.display = 'none';
+        if (leagueView) leagueView.style.display = 'none';
         bracketView.style.display = 'flex';
         renderBracket(appState.teams);
         restoreBracketState();
+    }
+
+    function showLeague() {
+        inputModule.style.display = 'none';
+        bracketView.style.display = 'none';
+        if (leagueView) leagueView.style.display = 'block'; // Or flex depending on layout needs, but display:block works over the container
+        renderCalendar();
+        renderLeaderboard();
+    }
+
+    // --- League Render Logic ---
+    function renderCalendar() {
+        const matchesListContainer = document.getElementById('matches-list-container');
+        if (!matchesListContainer) return;
+
+        matchesListContainer.innerHTML = '';
+
+        // Group matches by round
+        const rounds = {};
+        appState.matches.forEach(m => {
+            if (!rounds[m.round]) rounds[m.round] = [];
+            rounds[m.round].push(m);
+        });
+
+        Object.keys(rounds).sort((a, b) => a - b).forEach(rNum => {
+            const roundMatchList = rounds[rNum];
+
+            const roundHeader = document.createElement('h3');
+            roundHeader.className = 'orbitron-text glow-text sm';
+            roundHeader.style.fontSize = '0.9rem';
+            roundHeader.style.marginTop = '15px';
+            roundHeader.style.marginBottom = '5px';
+            roundHeader.innerText = `FECHA ${rNum}`;
+            matchesListContainer.appendChild(roundHeader);
+
+            roundMatchList.forEach(m => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerHTML = `
+                    <div class="match-team right">${m.home}</div>
+                    <div class="score-inputs">
+                        <input type="number" class="score-input p-home" data-id="${m.id}" data-side="home" min="0" value="${m.scoreHome !== null ? m.scoreHome : ''}">
+                        <span style="color:rgba(255,255,255,0.3)">-</span>
+                        <input type="number" class="score-input p-away" data-id="${m.id}" data-side="away" min="0" value="${m.scoreAway !== null ? m.scoreAway : ''}">
+                    </div>
+                    <div class="match-team">${m.away}</div>
+                `;
+                matchesListContainer.appendChild(card);
+            });
+        });
+
+        // Add Listeners
+        const scoreInputs = matchesListContainer.querySelectorAll('.score-input');
+        scoreInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                const id = e.target.getAttribute('data-id');
+                const side = e.target.getAttribute('data-side');
+                const val = e.target.value === '' ? null : parseInt(e.target.value);
+
+                const match = appState.matches.find(m => m.id === id);
+                if (match) {
+                    if (side === 'home') match.scoreHome = val;
+                    if (side === 'away') match.scoreAway = val;
+                    saveState();
+                    renderLeaderboard();
+                }
+            });
+        });
+    }
+
+    function computeLeaderboard() {
+        const stats = {};
+
+        // Initialize stats
+        appState.teams.forEach(t => {
+            stats[t] = { name: t, PTS: 0, PJ: 0, PG: 0, PE: 0, PP: 0, GF: 0, GC: 0, DIF: 0 };
+        });
+
+        // Tally scores
+        appState.matches.forEach(m => {
+            if (m.scoreHome !== null && m.scoreAway !== null) {
+                const hStats = stats[m.home];
+                const aStats = stats[m.away];
+
+                hStats.PJ++;
+                aStats.PJ++;
+                hStats.GF += m.scoreHome;
+                hStats.GC += m.scoreAway;
+                aStats.GF += m.scoreAway;
+                aStats.GC += m.scoreHome;
+
+                if (m.scoreHome > m.scoreAway) {
+                    hStats.PG++; hStats.PTS += 3;
+                    aStats.PP++;
+                } else if (m.scoreHome < m.scoreAway) {
+                    aStats.PG++; aStats.PTS += 3;
+                    hStats.PP++;
+                } else {
+                    hStats.PE++; hStats.PTS += 1;
+                    aStats.PE++; aStats.PTS += 1;
+                }
+            }
+        });
+
+        const arr = Object.values(stats);
+        arr.forEach(s => s.DIF = s.GF - s.GC);
+
+        // Standard tie-breakers: PTS > DIF > GF > PG > lowest GC
+        arr.sort((a, b) => {
+            if (b.PTS !== a.PTS) return b.PTS - a.PTS;
+            if (b.DIF !== a.DIF) return b.DIF - a.DIF;
+            if (b.GF !== a.GF) return b.GF - a.GF;
+            if (b.PG !== a.PG) return b.PG - a.PG;
+            return a.GC - b.GC;
+        });
+
+        return arr;
+    }
+
+    function renderLeaderboard() {
+        const tbody = document.getElementById('leaderboard-body');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        const sorted = computeLeaderboard();
+
+        sorted.forEach((teamStats, index) => {
+            const tr = document.createElement('tr');
+            tr.className = 'leaderboard-row';
+            if (index === 0 && teamStats.PJ > 0) tr.classList.add('rank-1');
+
+            tr.innerHTML = `
+                <td>${index + 1}</td>
+                <td class="text-left">${teamStats.name}</td>
+                <td><strong>${teamStats.PTS}</strong></td>
+                <td>${teamStats.PJ}</td>
+                <td>${teamStats.PG}</td>
+                <td>${teamStats.PE}</td>
+                <td>${teamStats.PP}</td>
+                <td>${teamStats.GF}</td>
+                <td>${teamStats.GC}</td>
+                <td>${teamStats.DIF > 0 ? '+' + teamStats.DIF : teamStats.DIF}</td>
+            `;
+            tbody.appendChild(tr);
+        });
     }
 
     function createNode(teamName, round, match, position) {
@@ -425,10 +700,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize App based on saved state
     try {
-        setMode(appState.mode || 'football');
-        setTeamSize(appState.teamCount || 8);
         if (appState.isStarted) {
-            showBracket();
+            if (appState.tournamentType === 'bracket') {
+                showBracket();
+            } else {
+                showLeague();
+            }
+        } else {
+            setTournamentType(appState.tournamentType || 'bracket');
+            setTeamSize(appState.teamCount || 8);
+            setMode(appState.mode || 'football');
+            setLeagueRounds(appState.leagueConfig ? appState.leagueConfig.rounds : 1);
         }
     } catch (e) {
         console.error("Initialization error", e);
